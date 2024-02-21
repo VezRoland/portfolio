@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Language {
+  id      String    @id @db.Uuid
+  name    String
+  code    String    @db.VarChar(2)
+  Page    Page[]
+  Project Project[]
+}
+
+model Page {
+  id         String   @id
+  position   Int?     @db.SmallInt
+  name       String
+  content    Json
+  languageId String   @db.Uuid
+  Language   Language @relation(fields: [languageId], references: [id])
+}
+
+model Project {
+  id         String   @id
+  position   Int
+  name       String
+  descr      String
+  images     String[]
+  links      String[]
+  languageId String   @db.Uuid
+  Language   Language @relation(fields: [languageId], references: [id])
+}
